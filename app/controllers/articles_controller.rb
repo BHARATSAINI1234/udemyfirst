@@ -1,10 +1,17 @@
 class ArticlesController < ApplicationController
- before_action :set_article, only: [:show, :edit, :update, :destroy]
+ before_action :set_article, only: [:edit, :update, :destroy]
 
   def show
+    if Article.find_by(params[:id]) == true
+        @article = Article.find(params[:id])
+    else
+        flash[:notice] = "Article is not available in data. "
+        redirect_to signup_path
+    end
   end
 
   def index
+    # @articles = current_user.articles.paginate(page: params[:page], per_page: 5)
     @articles = Article.paginate(page: params[:page], per_page: 5)
   end
 
@@ -41,10 +48,10 @@ class ArticlesController < ApplicationController
     redirect_to articles_path
   end
 
+
   private
 
     def set_article
-
       @article = Article.find(params[:id])
     end
 
@@ -52,4 +59,11 @@ class ArticlesController < ApplicationController
       params.require(:article).permit(:title, :description)
     end
 
+
+    def require_same_user
+      if current_user != @article.user && !current_user.admin?
+        flash[:alert] = "You can only edit or delete your own article"
+        redirect_to @article
+      end
+    end
 end
