@@ -49,20 +49,19 @@ class ArticlesController < ApplicationController
 
   private
 
-    def set_article
+  def set_article
+    @article = Article.find(params[:id])
+  end
 
-      @article = Article.find(params[:id])
-    end
+  def article_params
+     params.require(:article).permit(:title, :description, category_ids: [])
+  end
 
-    def article_params
-      params.require(:article).permit(:title, :description)
+  def require_same_user
+    if current_user != @article.user && !current_user.admin?
+      flash[:alert] = "You can only edit or delete your own article"
+      redirect_to @article
     end
-
-    def require_same_user
-      if current_user != @article.user && !current_user.admin?
-        flash[:alert] = "You can only edit or delete your own article"
-        redirect_to @article
-      end
-    end
+  end
 
 end
