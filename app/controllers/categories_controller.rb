@@ -1,5 +1,5 @@
 class CategoriesController < ApplicationController
-  before_action :require_admin, except: [:index]
+  before_action :require_admin, except: [:index, :show]
 
   def new
     @category = Category.new
@@ -15,17 +15,29 @@ class CategoriesController < ApplicationController
     end
   end
 
+
+  def edit
+    @category = Category.find(params[:id])
+  end
+
+  def update
+    @category = Category.find(params[:id])
+    if @category.update(category_params)
+      flash[:notice] = "Category name updated successfully"
+      redirect_to @category
+    else
+      render 'edit'
+    end
+  end
+
+
   def index
     @categories = Category.paginate(page: params[:page], per_page: 5)
   end
 
   def show
-    if Category.find_by(params[:id]) == true
-      @category = Category.find(params[:id])
-    else
-      flash[:notice] = "Category is not available"
-      redirect_to signup_path
-    end
+    @category = Category.find(params[:id])
+    @articles = @category.articles.paginate(page: params[:page], per_page: 5)
   end
 
   private
