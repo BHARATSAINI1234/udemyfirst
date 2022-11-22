@@ -34,18 +34,21 @@ class CategoriesControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to categories_url
   end
 
-  test "should show category" do
-    get category_url(@category)
-    assert_response :success
-  end
+  # test "should show category" do
+  #   get category_url(@category)
+  #   assert_response :success
+  # end
+
   # test "should get edit" do
   #   get edit_category_url(@category)
   #   assert_response :success
   # end
+
   # test "should update category" do
   #   patch category_url(@category), params: { category: {  } }
   #   assert_redirected_to category_url(@category)
   # end
+
   # test "should destroy category" do
   #   assert_difference('Category.count', -1) do
   #     delete category_url(@category)
